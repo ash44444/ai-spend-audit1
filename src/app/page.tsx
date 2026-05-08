@@ -2,7 +2,7 @@ export default function Home() {
 
   return (
 
-    <main className="min-h-screen bg-black text-white">
+    <main className="min-h-screen  text-black bg-white flex items-center justify-center">
 
       <section className="max-w-5xl mx-auto px-6 py-20">
 
@@ -21,8 +21,8 @@ export default function Home() {
         <button
           className="
             mt-8
-            bg-white
-            text-black
+            bg-black
+            text-white
             px-6
             py-3
             rounded-xl
