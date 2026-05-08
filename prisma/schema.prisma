@@ -1,0 +1,102 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UseCase {
+  coding
+  writing
+  research
+  data
+  mixed
+}
+
+enum AuditStatus {
+  completed
+  processing
+  failed
+}
+
+model Audit {
+  id String @id @default(cuid())
+
+  publicId String @unique
+
+  teamSize Int
+
+  useCase UseCase
+
+  monthlySavings Decimal @db.Decimal(10, 2)
+
+  annualSavings Decimal @db.Decimal(10, 2)
+
+  status AuditStatus @default(completed)
+
+  summary String?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  tools AuditTool[]
+
+  lead Lead?
+}
+
+model AuditTool {
+  id String @id @default(cuid())
+
+  auditId String
+
+  toolName String
+
+  currentPlan String
+
+  currentMonthlySpend Decimal @db.Decimal(10, 2)
+
+  seats Int
+
+  recommendedAction String
+
+  recommendedPlan String?
+
+  recommendedTool String?
+
+  estimatedMonthlySavings Decimal @db.Decimal(10, 2)
+
+  estimatedAnnualSavings Decimal @db.Decimal(10, 2)
+
+  reasoning String
+
+  pricingSourceUrl String
+
+  verifiedDate DateTime
+
+  createdAt DateTime @default(now())
+
+  audit Audit @relation(fields: [auditId], references: [id], onDelete: Cascade)
+}
+
+model Lead {
+  id String @id @default(cuid())
+
+  auditId String @unique
+
+  email String
+
+  companyName String?
+
+  role String?
+
+  teamSize Int?
+
+  wantsConsult Boolean @default(false)
+
+  createdAt DateTime @default(now())
+
+  audit Audit @relation(fields: [auditId], references: [id], onDelete: Cascade)
+}
